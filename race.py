@@ -1,61 +1,96 @@
-import pygame
-import time
-import random
+import pygame, sys
+from pygame.locals import *
+import time, random
 import threading
-reroll = True
 
+# some fundamental stuff
+pygame.init()
+FramePerSec = pygame.time.Clock()
 background_color = (0,130,23)
 screen = pygame.display.set_mode((400, 600))
 pygame.display.set_caption("Gonki")
 screen.fill(background_color)
 pygame.display.flip()
+clock = pygame.time.Clock()
+score = 0
+
+#fonts
+font = pygame.font.Font(None, 50)
+subFont = pygame.font.Font(None, 20)
+dead = font.render("GAME OVER", True, "Red")
+
 #car
-car = pygame.Surface((50,100))
-playerX = 300
-carImage = pygame.image.load("car.png")
-carBox = pygame.Rect(0, 0, 50, 100)
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        # i quite literally have no idea wtf this is
+        super().__init__()
+        self.image = pygame.image.load("car.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (50, 500)
+    def move(self):
+        keys = pygame.key.get_pressed()
+        # retrieves the coordinates of the left corner
+        # spirte's rectangle
+        # to make sure it is in the window still. 
+        if self.rect.left > 0:
+            if keys[pygame.K_a]:
+                    self.rect.move_ip(-4, 0)
+        # same thing but it's with the right corner
+        # of the rectangle
+        if self.rect.right < 400:
+            if keys[pygame.K_d]:
+                    self.rect.move_ip(4, 0)
 #rocks
-class Rocks:
-    rock = pygame.Surface(((50,50)), pygame.SRCALPHA)
-    rockBox = pygame.draw.circle(rock, (128,128,128), (25,25), 25)
-    def __init__(self):       
-        self.rockX = random.randint(25,375)
-        self.rockY = random.randint(25,200)    
-def initRocks():
-    rock1 = Rocks()
-    rock2 = Rocks()
-    rock3 = Rocks()
-    rockList = [rock1, rock2, rock3]
-    global reroll
-    reroll = False
-    return rockList
-def moveRock(rockList):
-    #this function sucks, but we'll fix it later (maybe)
-    screen.blit(rockList[0].rock, (rockList[0].rockX, rockList[0].rockY))
-    screen.blit(rockList[1].rock, (rockList[1].rockX, rockList[1].rockY))
-    screen.blit(rockList[2].rock, (rockList[2].rockX, rockList[2].rockY))
-    for x in rockList:
-        x.rockY += 0.1
+class Rocks(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load("rock.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (random.randint(40, 600), 0)
+    def move(self):
+        self.rect.move_ip(0, 1)
+        if (self.rect.top > 600):
+            self.rect.top = 0
+            self.rect.center = (random.randint(30, 200), 0)
+
+# creating variables for our classes
+rock = Rocks()
+user = Player()
+# we can add more obstacles / enemies in this group
+obstacles = pygame.sprite.Group()
+obstacles.add(rock)
+# grouping ALL sprites
+all_sprites = pygame.sprite.Group()
+all_sprites.add(user)
+all_sprites.add(rock)
+
 #main loop
 running = True
 while running:
+    leaderboard = subFont.render(str(score), True, "Black")
+    screen.blit(leaderboard, (10, 10))
+    clock.tick(320)
+    score += 1
     screen.fill(background_color)
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:
-            playerX -= .4
-    if keys[pygame.K_d]:
-            playerX += .4
-
     for event in pygame.event.get():   
         if event.type == pygame.QUIT:
             running = False
-    car.blit(carImage, (0,0))
-    screen.blit(car, (playerX,300))
-    if reroll == True:
-        rockList = initRocks()
-    moveRock(rockList)
-    if playerX <= 0:
-        playerX = 0
-    elif playerX >= 350:
-        playerX = 350
+    
+    # THIS WILL MOVE THE SPRITES + its hitboxes
+    # it's so short and sexy mmmm
+    for entity in all_sprites:
+            screen.blit(entity.image, entity.rect)
+            entity.move()
+
+    # if collision occurs with the user and obstacle
+    if pygame.sprite.spritecollideany(user, obstacles):
+          screen.fill("Black")
+          screen.blit(dead, (100, 250))
+          pygame.display.update()
+          for entity in all_sprites:
+                entity.kill() 
+          time.sleep(2)
+          running = False
+          sys.exit()        
+         
     pygame.display.update()
