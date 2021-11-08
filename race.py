@@ -46,7 +46,8 @@ class Rocks(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("rock.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (random.randint(40, 600), 0)
+        self.rect.center = (random.randint(60, 600), (0 - random.randint(300,900)))
+
     def move(self):
         self.rect.move_ip(0, 1)
         if (self.rect.top > 600):
@@ -55,14 +56,26 @@ class Rocks(pygame.sprite.Sprite):
 
 # creating variables for our classes
 rock = Rocks()
+rock2 = Rocks()
+rock3 = Rocks()
+rock4 = Rocks()
+rock5 = Rocks()
 user = Player()
 # we can add more obstacles / enemies in this group
 obstacles = pygame.sprite.Group()
 obstacles.add(rock)
+obstacles.add(rock2)
+obstacles.add(rock3)
+obstacles.add(rock4)
+obstacles.add(rock5)
 # grouping ALL sprites
 all_sprites = pygame.sprite.Group()
 all_sprites.add(user)
 all_sprites.add(rock)
+all_sprites.add(rock2)
+all_sprites.add(rock3)
+all_sprites.add(rock4)
+all_sprites.add(rock5)
 
 #main loop
 running = True
