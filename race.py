@@ -56,7 +56,7 @@ class Rocks(pygame.sprite.Sprite):
 
 # creating variables for our classes
 rock = [Rocks() for _ in range(5)]
-#I have no idea how the for loop above makes unique rick objects, but stackover user
+#I have no idea how the for loop above makes unique rock objects, but stackover user
 #Greg Hewgill did at https://stackoverflow.com/questions/1807026/initialize-a-list-of-objects-in-python
 user = Player()
 # we can add more obstacles / enemies in this group
