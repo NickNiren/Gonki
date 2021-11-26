@@ -9,10 +9,12 @@ FramePerSec = pygame.time.Clock()
 background_color = (0,130,23)
 screen = pygame.display.set_mode((400, 600))
 pygame.display.set_caption("Gonki")
-screen.fill(background_color)
+#screen.fill(background_color)
 pygame.display.flip()
 clock = pygame.time.Clock()
 score = 0
+track1 = pygame.image.load("track1.png")
+trackY = 0
 
 #fonts
 font = pygame.font.Font(None, 50)
@@ -66,19 +68,22 @@ obstacles.add(rock)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(user)
 all_sprites.add(rock)
-
+def scrollBackground():
+    global trackY
+    trackY -= 1
 #main loop
 running = True
 while running:
+    scrollBackground()
     leaderboard = subFont.render(str(score), True, "Black")
     screen.blit(leaderboard, (10, 10))
     clock.tick(320)
     score += 1
-    screen.fill(background_color)
+    screen.fill((0,0,0))
+    screen.blit(track1, (0,trackY)) 
     for event in pygame.event.get():   
         if event.type == pygame.QUIT:
-            running = False
-    
+            running = False   
     # THIS WILL MOVE THE SPRITES + its hitboxes
     # it's so short and sexy mmmm
     for entity in all_sprites:
@@ -94,6 +99,5 @@ while running:
                 entity.kill() 
           time.sleep(2)
           running = False
-          sys.exit()        
-         
+          sys.exit()            
     pygame.display.update()
