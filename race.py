@@ -13,7 +13,7 @@ pygame.display.set_caption("Gonki")
 pygame.display.flip()
 clock = pygame.time.Clock()
 score = 0
-track1 = pygame.image.load("track1.png")
+track = pygame.image.load("track1.png")
 trackY = 0
 
 #fonts
@@ -24,7 +24,6 @@ dead = font.render("GAME OVER", True, "Red")
 #car
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        # i quite literally have no idea wtf this is
         super().__init__()
         self.image = pygame.image.load("car.png")
         self.rect = self.image.get_rect()
@@ -36,12 +35,12 @@ class Player(pygame.sprite.Sprite):
         # to make sure it is in the window still. 
         if self.rect.left > 0:
             if keys[pygame.K_a]:
-                    self.rect.move_ip(-4, 0)
+                    self.rect.move_ip(-3, 0)
         # same thing but it's with the right corner
         # of the rectangle
         if self.rect.right < 400:
             if keys[pygame.K_d]:
-                    self.rect.move_ip(4, 0)
+                    self.rect.move_ip(3, 0)
 #rocks
 class Rocks(pygame.sprite.Sprite):
     def __init__(self):
@@ -51,7 +50,7 @@ class Rocks(pygame.sprite.Sprite):
         self.rect.center = (random.randint(60, 600), (0 - random.randint(300,900)))
 
     def move(self):
-        self.rect.move_ip(0, 1)
+        self.rect.move_ip(0, speed)
         if (self.rect.top > 600):
             self.rect.top = 0
             self.rect.center = (random.randint(30, 200), 0)
@@ -68,19 +67,68 @@ obstacles.add(rock)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(user)
 all_sprites.add(rock)
+def nextTrack():
+    rand = random.randint(1,10)
+    #i wish python had switches. idk maybe it does, but not like c# :(
+    if(rand == 1):
+        nextT = pygame.image.load("track1.png")
+    if(rand == 2):
+        nextT = pygame.image.load("track2.png")
+    if(rand == 3):
+        nextT = pygame.image.load("track3.png")
+    if(rand == 4):
+        nextT = pygame.image.load("track4.png")
+    if(rand == 5):
+        nextT = pygame.image.load("track5.png")
+    if(rand == 6):
+        nextT = pygame.image.load("track6.png")
+    if(rand == 7):
+        nextT = pygame.image.load("track7.png")
+    if(rand == 8):
+        nextT = pygame.image.load("track8.png")
+    if(rand == 9):
+        nextT = pygame.image.load("track9.png")
+    if(rand == 10):
+        nextT = pygame.image.load("track10.png")
+    return nextT
+speed = 1
 def scrollBackground():
     global trackY
-    trackY += 1
+    trackY += speed
+    screen.blit(track, (0,trackY))
+    try:
+        screen.blit(nextT, (0,trackY - 600)) 
+    except:
+        pass
+    return trackY
+first = True
+scoreFactor = 1
 #main loop
 running = True
-while running:
-    scrollBackground()
-    leaderboard = subFont.render(str(score), True, "Black")
-    screen.blit(leaderboard, (10, 10))
+while running:  
     clock.tick(320)
-    score += 1
+    try:
+        pixel_col = pygame.Surface.get_at(screen, (user.rect.right, 500))
+    except:
+        pass
+    #print(pixel_col)
+    if pixel_col == (34, 177, 76, 255):
+        print("SLOWED")
+        scoreFactor = 0
+    else:
+        scoreFactor = 1
+    score += round((speed * scoreFactor), 1)
     screen.fill((0,0,0))
-    screen.blit(track1, (0,trackY)) 
+    scrollBackground()
+    if ((trackY) > 600 or first == True):
+        first = False
+        try:
+            track = nextT
+        except:
+            pass
+        speed += 0.1
+        nextT = nextTrack()   
+        trackY = 0
     for event in pygame.event.get():   
         if event.type == pygame.QUIT:
             running = False   
@@ -89,7 +137,6 @@ while running:
     for entity in all_sprites:
             screen.blit(entity.image, entity.rect)
             entity.move()
-
     # if collision occurs with the user and obstacle
     if pygame.sprite.spritecollideany(user, obstacles):
           screen.fill("Black")
@@ -99,5 +146,9 @@ while running:
                 entity.kill() 
           time.sleep(2)
           running = False
-          sys.exit()            
+          sys.exit() 
+    leaderboard = subFont.render("Score: " + str(score), True, "Black")
+    speedL = subFont.render("Speed: " + str(round(speed, 1)), True, "Black")
+    screen.blit(leaderboard, (10, 10))  
+    screen.blit(speedL, (10, 20))         
     pygame.display.update()
