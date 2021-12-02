@@ -50,11 +50,11 @@ class Rocks(pygame.sprite.Sprite):
         self.rect.center = (random.randint(60, 600), (0 - random.randint(300,900)))
 
     def move(self):
-        self.rect.move_ip(0, speed)
+        self.rect.move_ip(0, speed) 
         if (self.rect.top > 600):
             self.rect.top = 0
             self.rect.center = (random.randint(30, 200), 0)
-
+# collision: https://coderslegacy.com/python/pygame-tutorial-part-2/
 # creating variables for our classes
 rock = [Rocks() for _ in range(5)]
 #I have no idea how the for loop above makes unique rock objects, but stackover user
