@@ -70,7 +70,7 @@ all_sprites.add(user)
 all_sprites.add(rock)
 def scrollBackground():
     global trackY
-    trackY -= 1
+    trackY += 1
 #main loop
 running = True
 while running:
