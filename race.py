@@ -15,12 +15,11 @@ clock = pygame.time.Clock()
 score = 0
 track = pygame.image.load("track1.png")
 trackY = 0
-
+speed = 1
 #fonts
 font = pygame.font.Font(None, 50)
 subFont = pygame.font.Font(None, 20)
 dead = font.render("GAME OVER", True, "Red")
-
 #car
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -91,7 +90,6 @@ def nextTrack():
     if(rand == 10):
         nextT = pygame.image.load("track10.png")
     return nextT
-speed = 1
 def scrollBackground():
     global trackY
     trackY += speed
@@ -141,13 +139,17 @@ while running:
     if pygame.sprite.spritecollideany(user, obstacles):
           screen.fill("Black")
           screen.blit(dead, (100, 250))
+          endScore = font.render("SCORE:" + str(round(score, 1)), True, "Red")
+          endSpeed = font.render("SPEED:" + str(round(speed, 1)), True, "Red")
+          screen.blit(endScore, (100, 350))
+          screen.blit(endSpeed, (100, 450))
           pygame.display.update()
           for entity in all_sprites:
                 entity.kill() 
           time.sleep(2)
           running = False
           sys.exit() 
-    leaderboard = subFont.render("Score: " + str(score), True, "Black")
+    leaderboard = subFont.render("Score: " + str(round(score, 1)), True, "Black")
     speedL = subFont.render("Speed: " + str(round(speed, 1)), True, "Black")
     screen.blit(leaderboard, (10, 10))  
     screen.blit(speedL, (10, 20))         
