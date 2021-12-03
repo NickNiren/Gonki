@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load("car.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (50, 500)
+        self.rect.center = (200, 500)
     def move(self):
         keys = pygame.key.get_pressed()
         # retrieves the coordinates of the left corner
