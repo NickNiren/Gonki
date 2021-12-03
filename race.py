@@ -52,10 +52,10 @@ class Rocks(pygame.sprite.Sprite):
         self.rect.move_ip(0, speed) 
         if (self.rect.top > 600):
             self.rect.top = 0
-            self.rect.center = (random.randint(30, 200), 0)
+            self.rect.center = (random.randint(60, 600), 0)
 # collision: https://coderslegacy.com/python/pygame-tutorial-part-2/
 # creating variables for our classes
-rock = [Rocks() for _ in range(5)]
+rock = [Rocks() for _ in range((int)(speed * 5))]
 #I have no idea how the for loop above makes unique rock objects, but stackover user
 #Greg Hewgill did at https://stackoverflow.com/questions/1807026/initialize-a-list-of-objects-in-python
 user = Player()
@@ -146,7 +146,7 @@ while running:
           pygame.display.update()
           for entity in all_sprites:
                 entity.kill() 
-          time.sleep(2)
+          time.sleep(4)
           running = False
           sys.exit() 
     leaderboard = subFont.render("Score: " + str(round(score, 1)), True, "Black")
