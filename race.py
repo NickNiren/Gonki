@@ -1,7 +1,6 @@
 import pygame, sys
 from pygame.locals import *
 import time, random
-import threading
 
 # some fundamental stuff
 pygame.init()
@@ -67,7 +66,7 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(user)
 all_sprites.add(rock)
 def nextTrack():
-    rand = random.randint(1,10)
+    rand = random.randint(1,20)
     #i wish python had switches. idk maybe it does, but not like c# :(
     if(rand == 1):
         nextT = pygame.image.load("track1.png")
@@ -89,6 +88,26 @@ def nextTrack():
         nextT = pygame.image.load("track9.png")
     if(rand == 10):
         nextT = pygame.image.load("track10.png")
+    if(rand == 11):
+        nextT = pygame.image.load("track11.png")
+    if(rand == 12):
+        nextT = pygame.image.load("track12.png")
+    if(rand == 13):
+        nextT = pygame.image.load("track13.png")
+    if(rand == 14):
+        nextT = pygame.image.load("track14.png")
+    if(rand == 15):
+        nextT = pygame.image.load("track15.png")
+    if(rand == 16):
+        nextT = pygame.image.load("track16.png")
+    if(rand == 17):
+        nextT = pygame.image.load("track17.png")
+    if(rand == 18):
+        nextT = pygame.image.load("track18.png")
+    if(rand == 19):
+        nextT = pygame.image.load("track19.png")
+    if(rand == 20):
+        nextT = pygame.image.load("track20.png")
     return nextT
 def scrollBackground():
     global trackY
@@ -139,8 +158,8 @@ while running:
     if pygame.sprite.spritecollideany(user, obstacles):
           screen.fill("Black")
           screen.blit(dead, (100, 250))
-          endScore = font.render("SCORE:" + str(round(score, 1)), True, "Red")
-          endSpeed = font.render("SPEED:" + str(round(speed, 1)), True, "Red")
+          endScore = font.render("SCORE: " + str(round(score, 1)), True, "Red")
+          endSpeed = font.render("SPEED: " + str(round(speed, 1)), True, "Red")
           screen.blit(endScore, (100, 350))
           screen.blit(endSpeed, (100, 450))
           pygame.display.update()
